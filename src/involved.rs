@@ -1,20 +1,21 @@
-use std::cmp::{Ordering, Reverse};
+use std::cmp::Reverse;
 use std::mem::swap;
-use std::ops::Div;
+
 use num_traits::{One, Zero};
+
 use crate::{Input, Solution};
 use crate::infint::InfInt;
 use crate::infint::InfInt::{MinusInf, Num, PlusInf};
 use crate::myint::{DivideTowardsNegInfty, MyInt};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 struct FunctionEntry {
     index: usize,
     first_incl: InfInt<MyInt>,
-    last_incl: InfInt<MyInt>
+    last_incl: InfInt<MyInt>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct LookupStructure {
     /*
     Invariants:
@@ -46,7 +47,7 @@ impl LookupStructure {
         self.data.push(FunctionEntry {
             index,
             first_incl,
-            last_incl
+            last_incl,
         })
     }
 
@@ -58,7 +59,7 @@ impl LookupStructure {
     }
 
     fn drop_lowest(&mut self) -> FunctionEntry {
-        self.data.pop().expect("Not to be empty")
+        self.data.pop().unwrap()
     }
 
     fn peek_lowest(&self) -> Option<&FunctionEntry> {
@@ -80,7 +81,15 @@ impl LookupStructure {
             // this and the next one might only dominate for < 1 grid.
             // in other words, the domination is never observed
             // so we add them in this order (by domination at the grid slot where it actually matters).
+
+            //first, we add the method we just replaced.
+            //it must start at index coord, replacing next if it was inserted,
+            //so that this matches up with what happens in the layer above
             next.add_lowest_combining(entry_index, coord.clone());
+
+            //next we add the things we dropped along the way
+            //here, we also add combining-ly, since entry_index might have been dominated by these
+            //so they need to overwrite it again
             if let Some(x) = new_back_for_lowest.pop() {
                 next.add_lowest_combining(x.index, x.last_incl);
             }
@@ -99,7 +108,7 @@ impl LookupStructure {
                     // the domain ends before we can dominate (and does not start at -inf)
                     // this means that we removed all stuff that came before
                     // and are now the new dominators for that all
-                    let coord = entry.first_incl.clone() + (-MyInt::one());
+                    let coord = entry.first_incl.clone() - MyInt::one();
                     self.insert_at_coord(input, idx, coord, entry.index, new_back_for_lowest);
                     return;
                 }
@@ -173,9 +182,9 @@ impl Input {
         compare_fns(a_1, b_1, a_2, b_2)
     }
 
-    pub fn build_lookup_structure(&mut self) -> Box<LookupStructure> {
+    pub fn build_lookup_structure(&mut self, depth: usize) -> Box<LookupStructure> {
         self.sort();
-        let mut lu = LookupStructure::new(1);
+        let mut lu = LookupStructure::new(depth);
         for idx in 0..self.data.len() {
             lu.insert(self, idx);
         }
@@ -188,7 +197,7 @@ impl Input {
     }
 
     pub fn solve_fast(&mut self) -> Solution {
-        let lu = self.build_lookup_structure();
+        let lu = self.build_lookup_structure(1);
         let mut mx = None;
         for i in 0..self.data.len() {
             let (a_i, b_i) = &self.data[i];
@@ -208,16 +217,16 @@ impl Input {
 }
 
 /**
-  given f_1(x) = a_1 * b_1 + x * b_1,
-        f_2(x) = a_2 * b_2 + x * b_2,
-  returns z such that
-      forall k >  z, f_2(k)  > f_1(k)
-  and forall k <= z, f_2(k) <= f_1(k)
-*/
+given f_1(x) = a_1 * b_1 + x * b_1,
+      f_2(x) = a_2 * b_2 + x * b_2,
+returns z such that
+    forall k >  z, f_2(k) >  f_1(k)
+and forall k <= z, f_2(k) <= f_1(k)
+ */
 pub fn compare_fns(a_1: &MyInt, b_1: &MyInt, a_2: &MyInt, b_2: &MyInt) -> InfInt<MyInt> {
     debug_assert!(b_1 <= b_2);
     if b_1 == b_2 {
-        if if b_1.is_positive() {a_1 < a_2} else {a_2 < a_1} {
+        if if b_1 > &MyInt::zero() { a_1 < a_2 } else { a_2 < a_1 } {
             MinusInf
         } else {
             PlusInf

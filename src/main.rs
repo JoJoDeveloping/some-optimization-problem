@@ -1,8 +1,8 @@
 use std::{env, panic};
 
 use rand::Rng;
+
 use crate::myint::MyInt;
-use crate::test::*;
 
 #[derive(Debug)]
 pub struct Input {
@@ -24,7 +24,7 @@ impl Input {
         debug_assert!(!data.is_empty());
         let permutation = (0..data.len()).collect();
         Self {
-            data: data.into_iter().map(|(a,b)| (MyInt::from(a), MyInt::from(b))).collect(),
+            data: data.into_iter().map(|(a, b)| (MyInt::from(a), MyInt::from(b))).collect(),
             permutation,
         }
     }
@@ -38,13 +38,13 @@ pub mod involved;
 pub mod infint;
 
 pub mod myint;
-
+#[cfg(test)]
 pub mod test;
 
 fn random_vec(len: usize) -> Vec<(MyInt, MyInt)> {
     let mut rng = rand::thread_rng();
     let mut v = Vec::with_capacity(len);
-    for i in 0..len {
+    for _ in 0..len {
         v.push((
             MyInt::from(rng.gen_range(-100..=100)),
             MyInt::from(rng.gen_range(-100..=100))))
@@ -60,7 +60,7 @@ fn test_random() {
     let num = env::args().skip(1).next().unwrap().parse::<usize>().unwrap();
     let involved = env::args().skip(2).next().unwrap().parse::<i32>().unwrap();
     let cnt = env::args().skip(3).next().unwrap_or_else(|| "1".into()).parse::<usize>().unwrap();
-    for i in 0..cnt {
+    for _ in 0..cnt {
         let mut a = Input::new(random_vec(num));
         match involved {
             0 => { dbg!(a.solve_naively()); }
@@ -77,15 +77,15 @@ fn test_random() {
 }
 
 fn main() {
-    // test_random();
-    test_example();
-    test_example2();
-    test_example3();
-    test_example4();
-    test_example5();
-    test_example6();
-    test_example7();
-    test_example8();
-    test_example9();
+    test_random();
+    // test_example();
+    // test_example2();
+    // test_example3();
+    // test_example4();
+    // test_example5();
+    // test_example6();
+    // test_example7();
+    // test_example8();
+    // test_example9();
 }
 

@@ -1,6 +1,16 @@
 use crate::Input;
+use crate::involved::LookupStructure;
 
-pub fn test_example() {
+pub fn check(data_vec: Vec<(i32, i32)>) -> (Input, Box<LookupStructure>) {
+    let mut input = Input::from_i32(data_vec);
+    assert_eq!(input.solve_fast().0, input.solve_naively().0);
+    let ls = input.build_lookup_structure(1);
+    (input, ls)
+}
+
+
+#[test]
+pub fn test_example1() {
     let data_vec = vec![
         (-27, 7),
         (1, 4),
@@ -10,12 +20,10 @@ pub fn test_example() {
         (70, 1),
         (80, 0),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(input);
-    dbg!(ls);
+    check(data_vec);
 }
 
+#[test]
 pub fn test_example2() {
     let data_vec = vec![
         // (13, 10),
@@ -23,12 +31,10 @@ pub fn test_example2() {
         (3, 32),
         (3, 40),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(input);
-    dbg!(ls);
+    check(data_vec);
 }
 
+#[test]
 pub fn test_example3() {
     let data_vec = vec![
         (0, 105),
@@ -36,12 +42,10 @@ pub fn test_example3() {
         (16, 6),
         (100, 1),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(input);
-    dbg!(ls);
+    check(data_vec);
 }
 
+#[test]
 pub fn test_example4() {
     let data_vec = vec![
         (-63, 71, ),
@@ -50,17 +54,10 @@ pub fn test_example4() {
         (32, -31, ),
         (-42, -51, ),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    check(data_vec);
 }
 
+#[test]
 pub fn test_example5() {
     let data_vec = vec![
         (4, 100, ),
@@ -69,18 +66,11 @@ pub fn test_example5() {
         // (61, 11, ),
         // (74, 2, ),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    check(data_vec);
 }
 
 
+#[test]
 pub fn test_example6() {
     let data_vec = vec![
         (1, 50),
@@ -89,18 +79,11 @@ pub fn test_example6() {
         (80, 3),
         (100, 2),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    check(data_vec);
 }
 
 
+#[test]
 pub fn test_example7() {
     let data_vec = vec![
         (15, 94),
@@ -109,37 +92,23 @@ pub fn test_example7() {
         (26, 62),
         (72, 48),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    check(data_vec);
 }
 
 
+#[test]
 pub fn test_example8() {
     let data_vec = vec![
         (0, 91),
         (13, 76),
         (72, 74),
         (20, 71),
-        (49, 54)
+        (49, 54),
     ];
-    let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    check(data_vec);
 }
 
+#[test]
 pub fn test_example9() {
     let data_vec = vec![
         (-33, 81),
@@ -148,13 +117,16 @@ pub fn test_example9() {
         (-50, -23),
         (-49, -23),
     ];
+    check(data_vec);
+}
+
+#[test]
+pub fn check_level_3() {
+    let data_vec = vec![
+        (3, 40),
+        (5, 21),
+        (3, 32),
+    ];
     let mut input = Input::from_i32(data_vec);
-    let ls = input.build_lookup_structure();
-    dbg!(&input);
-    dbg!(ls);
-    let a1 = input.solve_naively();
-    let a2 = input.solve_fast();
-    // dbg!(&a1);
-    // dbg!(&a2);
-    assert_eq!(a1.0, a2.0)
+    let _ls = input.build_lookup_structure(2);
 }

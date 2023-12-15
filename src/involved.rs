@@ -162,6 +162,7 @@ impl Input {
         let mut vec_to_sort: Vec<_> = self_data.into_iter().enumerate().collect();
         vec_to_sort.sort_unstable_by(|l, r| {
             l.1.1.cmp(&r.1.1).then_with(|| {
+                // compare multiplication to properly handle signedness
                 let l1 = &l.1.0 * &l.1.1;
                 let r1 = &r.1.0 * &r.1.1;
                 l1.cmp(&r1)

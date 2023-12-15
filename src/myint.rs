@@ -22,5 +22,6 @@ impl<T> DivideTowardsNegInfty for T
     }
 }
 
-// change this to e.g. BigInt
+// change this to e.g. BigInt or u<something>
+// note that this needs to handle 3 * max_input², so I used i128
 pub type MyInt = i128;

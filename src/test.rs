@@ -121,6 +121,16 @@ pub fn test_example9() {
 }
 
 #[test]
+pub fn test_example10() {
+    let data_vec = vec![
+        (-5, 1),
+        (0, 0),
+        (-5, -1),
+    ];
+    dbg!(check(data_vec));
+}
+
+#[test]
 pub fn check_level_3() {
     let data_vec = vec![
         (3, 40),

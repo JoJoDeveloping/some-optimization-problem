@@ -227,7 +227,7 @@ and forall k <= z, f_2(k) <= f_1(k)
 pub fn compare_fns(a_1: &MyInt, b_1: &MyInt, a_2: &MyInt, b_2: &MyInt) -> InfInt<MyInt> {
     debug_assert!(b_1 <= b_2);
     if b_1 == b_2 {
-        if if b_1 > &MyInt::zero() { a_1 < a_2 } else { a_2 < a_1 } {
+        if if b_1 >= &MyInt::zero() { a_1 < a_2 } else { a_2 < a_1 } {
             MinusInf
         } else {
             PlusInf

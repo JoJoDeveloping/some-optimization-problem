@@ -1,0 +1,16 @@
+opam-version: "2.0"
+name: "convex-hull-example"
+license: "BSD-3-Clause"
+maintainer: "Johannes Hostert"
+authors: "Johannes Hostert"
+synopsis: "A variation on the convex hull trick"
+homepage: "https://abc.xyz"
+version: "dev"
+
+depends: [
+  "coq-stdpp" { (= "1.9.0") | (= "dev") }
+  "coq-equations" { (= "1.3+8.16") | (= "1.3+8.17") }
+]
+
+build: [make "-j%{jobs}%"]
+install: [make "install"]
